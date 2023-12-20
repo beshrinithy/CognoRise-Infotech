@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... (other head elements) ... -->
+    <title>hi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #3498db; /* Set your desired background color */
+            color: #fff; /* Set text color to white for better contrast */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #clock {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        #setAlarmForm {
+            margin-top: 20px;
+        }
+
+        #alarmToneSelect {
+            margin-top: 10px;
+        }
+
+        #alarmList {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #2ecc71; /* Set button color */
+            color: #fff; /* Set button text color */
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* The .alarm class styling */
+    </style>
+</head>
+
+<body>
+<audio id="alarmAudio" src="alarm.mp3"></audio>
+
+<div id="clock">Loading...</div>
+<div id="setAlarmForm">
+    <label for="alarmTime">Alarm Time:</label>
+    <input type="time" id="alarmTime" required>
+    <br>
+    <label for="alarmToneSelect">Alarm Tone:</label>
+    <select id="alarmToneSelect">
+        <option value="tone1">Tone 1</option>
+        <option value="tone2">Tone 2</option>
+        <!-- Add more tones as needed -->
+    </select>
+    <br>
+    <button onclick="setAlarm()">Set Alarm</button>
+</div>
+<div id="alarmList">
+    <h2>Alarms</h2>
+    <!-- Alarm items will be dynamically added here -->
+</div>
+
+<script>
+    function setAlarm() {
+        const alarmTime = document.getElementById('alarmTime').value;
+        const alarmTone = document.getElementById('alarmToneSelect').value;
+
+        // Store the alarm details in localStorage for simplicity
+        localStorage.setItem('alarmTime', alarmTime);
+        localStorage.setItem('alarmTone', alarmTone);
+
+        // Hide the set alarm form after setting the alarm
+        document.getElementById('setAlarmForm').style.display = 'none';
+    }
+
+    function updateClock() {
+        const clock = document.getElementById('clock');
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+        const dateString = now.toDateString();
+        clock.innerHTML = `${timeString}<br>${dateString}`;
+
+        // Check if it's time to trigger the alarm
+        const storedAlarmTime = localStorage.getItem('alarmTime');
+        if (storedAlarmTime && isAlarmTime(now, storedAlarmTime)) {
+            triggerAlarm();
+        }
+    }
+
+    function isAlarmTime(currentTime, storedAlarmTime) {
+        // Compare hours and minutes only
+        const currentHours = currentTime.getHours();
+        const currentMinutes = currentTime.getMinutes();
+
+        const [alarmHours, alarmMinutes] = storedAlarmTime.split(':').map(Number);
+
+        return currentHours === alarmHours && currentMinutes === alarmMinutes;
+    }
+
+    function triggerAlarm() {
+        const alarmTone = localStorage.getItem('alarmTone');
+        const alarmAudio = new Audio("alarm.mp3");
+
+        // Play the audio
+        alarmAudio.play();
+
+        const alarmList = document.getElementById('alarmList');
+        const newAlarmItem = document.createElement('div');
+        newAlarmItem.classList.add('alarm');
+        newAlarmItem.textContent = `Alarm at ${localStorage.getItem('alarmTime')} with ${alarmTone} tone`;
+        alarmList.appendChild(newAlarmItem);
+    }
+
+    // Initialize the clock and set an interval to update it
+    updateClock();
+    setInterval(updateClock, 1000);
+</script>
+</body>
+</html>
