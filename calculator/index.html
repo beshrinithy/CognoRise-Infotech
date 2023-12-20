@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #3498db, #e74c3c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #calculator {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            color: #333;
+            outline: none;
+        }
+
+        button {
+            width: 45px;
+            height: 45px;
+            margin: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+<div id="calculator">
+    <label for="display">Display:</label>
+    <input type="text" id="display" readonly>
+    <br>
+    <button onclick="appendNumber('7')">7</button>
+    <button onclick="appendNumber('8')">8</button>
+    <button onclick="appendNumber('9')">9</button>
+    <button onclick="operate('/')">/</button>
+    <br>
+    <button onclick="appendNumber('4')">4</button>
+    <button onclick="appendNumber('5')">5</button>
+    <button onclick="appendNumber('6')">6</button>
+    <button onclick="operate('*')">*</button>
+    <br>
+    <button onclick="appendNumber('1')">1</button>
+    <button onclick="appendNumber('2')">2</button>
+    <button onclick="appendNumber('3')">3</button>
+    <button onclick="operate('-')">-</button>
+    <br>
+    <button onclick="appendNumber('0')">0</button>
+    <button onclick="appendDecimal()">.</button>
+    <button onclick="calculate()">=</button>
+    <button onclick="operate('+')">+</button>
+    <br>
+    <button id="clear" onclick="clearDisplay()">C</button>
+</div>
+
+<script>
+    let currentInput = '';
+
+    function appendNumber(number) {
+        currentInput += number;
+        updateDisplay();
+    }
+
+    function appendDecimal() {
+        if (!currentInput.includes('.')) {
+            currentInput += '.';
+            updateDisplay();
+        }
+    }
+
+    function operate(operator) {
+        currentInput += ` ${operator} `;
+        updateDisplay();
+    }
+
+    function calculate() {
+        try {
+            currentInput = eval(currentInput).toString();
+            updateDisplay();
+        } catch (error) {
+            currentInput = 'Error';
+            updateDisplay();
+        }
+    }
+
+    function clearDisplay() {
+        currentInput = '';
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        document.getElementById('display').value = currentInput;
+    }
+</script>
+</body>
+</html>
